@@ -3,6 +3,7 @@ package models
 import "time"
 
 type Trip struct {
+	ID                string `json:"id" bson:"_id,omitempty"`
 	From             string    `json:"from" bson:"from"`
 	To               string    `json:"to" bson:"to"`
 	DepartureTime    time.Time `json:"departure_time" bson:"departure_time"`

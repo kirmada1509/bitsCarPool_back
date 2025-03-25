@@ -1,19 +1,24 @@
 package database
 
 import (
+	"bitsCarPool_back/internal/models"
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
 	_ "github.com/joho/godotenv/autoload"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Service interface {
 	Health() map[string]string
+	CreateTrip(trip *models.Trip) (string, error)
+
 }
 
 type service struct {
@@ -50,4 +55,25 @@ func (s *service) Health() map[string]string {
 	return map[string]string{
 		"message": "It's healthy",
 	}
+}
+
+
+func(s *service) CreateTrip(trip *models.Trip) (string, error) {
+	if trip == nil {
+		return "", errors.New("invalid trip data")
+	}
+	trip.CreatedAt = time.Now()
+	trip.UpdatedAt = time.Now()
+
+	collection := s.db.Database(database).Collection("trips")
+	res, err := collection.InsertOne(context.Background(), trip)
+	if err != nil {
+		return "", err
+	}
+
+	id, ok := res.InsertedID.(primitive.ObjectID)
+	if !ok {
+		return "", errors.New("failed to retrieve trip ID")
+	}
+	return id.Hex(), nil
 }

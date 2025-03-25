@@ -5,6 +5,9 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
+	"bitsCarPool_back/internal/database"
+	"bitsCarPool_back/internal/models"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -21,6 +24,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/health", s.healthHandler)
 
+	r.POST("/trips", s.createTripsHandler)
+
 	return r
 }
 
@@ -34,3 +39,19 @@ func (s *Server) HelloWorldHandler(c *gin.Context) {
 func (s *Server) healthHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, s.db.Health())
 }
+
+func (s *Server) createTripsHandler(c *gin.Context) {
+	var trip models.Trip
+	if err := c.ShouldBindJSON(&trip); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := database.New().CreateTrip(&trip)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusAccepted, gin.H{"id": id})
+}
+
