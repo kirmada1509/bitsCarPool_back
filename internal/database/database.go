@@ -1,16 +1,15 @@
 package database
 
 import (
+	"bitsCarPool_back/internal/crud/trips"
 	"bitsCarPool_back/internal/models"
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"os"
 	"time"
 
 	_ "github.com/joho/godotenv/autoload"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -18,28 +17,28 @@ import (
 type Service interface {
 	Health() map[string]string
 	CreateTrip(trip *models.Trip) (string, error)
-
 }
 
 type service struct {
-	db *mongo.Client
+	db    *mongo.Client
+	trips trips.TripService
 }
 
 var (
-	host = os.Getenv("BLUEPRINT_DB_HOST")
-	port = os.Getenv("BLUEPRINT_DB_PORT")
+	host     = os.Getenv("BLUEPRINT_DB_HOST")
+	port     = os.Getenv("BLUEPRINT_DB_PORT")
 	database = os.Getenv("BLUEPRINT_DB_DATABASE")
 )
 
 func New() Service {
 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%s", host, port)))
-
 	if err != nil {
 		log.Fatal(err)
-
 	}
+
 	return &service{
-		db: client,
+		db:    client,
+		trips: trips.NewTripService(client, database),
 	}
 }
 
@@ -57,23 +56,6 @@ func (s *service) Health() map[string]string {
 	}
 }
 
-
-func(s *service) CreateTrip(trip *models.Trip) (string, error) {
-	if trip == nil {
-		return "", errors.New("invalid trip data")
-	}
-	trip.CreatedAt = time.Now()
-	trip.UpdatedAt = time.Now()
-
-	collection := s.db.Database(database).Collection("trips")
-	res, err := collection.InsertOne(context.Background(), trip)
-	if err != nil {
-		return "", err
-	}
-
-	id, ok := res.InsertedID.(primitive.ObjectID)
-	if !ok {
-		return "", errors.New("failed to retrieve trip ID")
-	}
-	return id.Hex(), nil
+func (s *service) CreateTrip(trip *models.Trip) (string, error) {
+	return s.trips.CreateTrip(trip)
 }
