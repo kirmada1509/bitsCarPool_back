@@ -10,7 +10,7 @@ type Trip struct {
 	DepartureTime    time.Time `json:"departure_time" bson:"departure_time"`
 	FlexibilityWindow int      `json:"flexibility_window" bson:"flexibility_window"`
 	TotalFare        float64   `json:"total_fare" bson:"total_fare"`
-	VehicleModel        string  `json:"model" bson:"model"`
+	VehicleModel        string  `json:"vehicle_model" bson:"vehicle_model"`
 	Capacity     int     `json:"capacity" bson:"capacity"` 
 	SeatsAvailable   int       `json:"seats_available" bson:"seats_available"`
 	FuelType     string  `json:"fuel_type" bson:"fuel_type"` 

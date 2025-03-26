@@ -49,6 +49,11 @@ func (s *Server) createTripsHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	
+	if trip.VehicleModel == ""{
+		c.JSON(http.StatusBadRequest, gin.H{"error": "no vehicle"})
+		return
+	}
 
 	id, err := trips.NewTripService(database.New().GetClient()).CreateTrip(&trip)
 	if err != nil {
