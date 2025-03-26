@@ -80,7 +80,7 @@ func (s *Server) searchTripsHandler(c *gin.Context){
 }
 
 func (s *Server) createNotificationHandler(c *gin.Context){
-	var notification_body models.Notification
+	var notification_body models.NotificationDetails
 	
 	if err := c.ShouldBindJSON(&notification_body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

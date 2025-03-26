@@ -6,7 +6,7 @@ import (
 )
 
 type NotificationService interface{
-	CreateNotification(notification *models.Notification) (string, error)
+	CreateNotification(notification *models.NotificationDetails) (string, error)
 }
 
 type notificationService struct{
