@@ -1,4 +1,4 @@
-package trips
+package trip
 
 import (
 	"bitsCarPool_back/internal/models"

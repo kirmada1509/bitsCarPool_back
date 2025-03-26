@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	"bitsCarPool_back/internal/crud/notifications"
 	"bitsCarPool_back/internal/crud/trips"
 	"bitsCarPool_back/internal/database"
 	"bitsCarPool_back/internal/models"
@@ -29,6 +30,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.POST("/trips", s.createTripsHandler)
 	r.GET("/trips", s.searchTripsHandler)
 
+	//notfications
+	r.POST("/notification", s.createNotificationHandler)
+
 	return r
 }
 
@@ -44,18 +48,14 @@ func (s *Server) healthHandler(c *gin.Context) {
 }
 
 func (s *Server) createTripsHandler(c *gin.Context) {
-	var trip models.Trip
-	if err := c.ShouldBindJSON(&trip); err != nil {
+	var trip_body models.Trip
+	if err := c.ShouldBindJSON(&trip_body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	
-	if trip.VehicleModel == ""{
-		c.JSON(http.StatusBadRequest, gin.H{"error": "no vehicle"})
-		return
-	}
 
-	id, err := trips.NewTripService(database.New().GetClient()).CreateTrip(&trip)
+
+	id, err := trip.NewTripService(database.New().GetClient()).CreateTrip(&trip_body)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -70,7 +70,7 @@ func (s *Server) searchTripsHandler(c *gin.Context){
 		return
 	}
 
-	trips, err :=trips.NewTripService(database.New().GetClient()).SearchTrips(search)
+	trips, err := trip.NewTripService(database.New().GetClient()).SearchTrips(search)
 	if err != nil{
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -79,3 +79,18 @@ func (s *Server) searchTripsHandler(c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{"trips": trips})
 }
 
+func (s *Server) createNotificationHandler(c *gin.Context){
+	var notification_body models.NotificationModel
+
+	if err := c.ShouldBindJSON(&notification_body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	id, err := notification.NewNotificationService(database.New().GetClient()).CreateNotification(&notification_body)
+	
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"id": id})
+}

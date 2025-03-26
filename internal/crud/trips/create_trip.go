@@ -1,10 +1,9 @@
-package trips
+package trip
 
 import (
 	"bitsCarPool_back/internal/models"
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,10 +14,7 @@ func (s *tripService) CreateTrip(trip *models.Trip) (string, error) {
 	if trip == nil {
 		return "", errors.New("invalid trip data")
 	}
-	if(trip.VehicleModel == ""){
-		return "", errors.New("empty vehicle model")
-	}
-	fmt.Println("vehicle model, ", trip.VehicleModel)
+
 	trip.CreatedAt = time.Now()
 	trip.UpdatedAt = time.Now()
 

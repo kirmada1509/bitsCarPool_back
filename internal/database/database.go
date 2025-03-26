@@ -1,7 +1,6 @@
 package database
 
 import (
-	"bitsCarPool_back/internal/crud/trips"
 	"context"
 	"fmt"
 	"log"
@@ -21,7 +20,6 @@ type Service interface {
 
 type service struct {
 	db    *mongo.Client
-	trips trips.TripService
 }
 
 var (
