@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	"bitsCarPool_back/internal/crud/trips"
 	"bitsCarPool_back/internal/database"
 	"bitsCarPool_back/internal/models"
 )
@@ -24,7 +25,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.GET("/health", s.healthHandler)
 
+	//trips
 	r.POST("/trips", s.createTripsHandler)
+	r.GET("/trips", s.searchTripsHandler)
 
 	return r
 }
@@ -47,11 +50,27 @@ func (s *Server) createTripsHandler(c *gin.Context) {
 		return
 	}
 
-	id, err := database.New().CreateTrip(&trip)
+	id, err := trips.NewTripService(database.New().GetClient()).CreateTrip(&trip)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusAccepted, gin.H{"id": id})
+}
+
+func (s *Server) searchTripsHandler(c *gin.Context){
+	var search models.TripSearch
+	if err := c.ShouldBindJSON(&search); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	trips, err :=trips.NewTripService(database.New().GetClient()).SearchTrips(search)
+	if err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"trips": trips})
 }
 

@@ -7,6 +7,7 @@ import (
 
 type TripService interface {
 	CreateTrip(trip *models.Trip) (string, error)
+	SearchTrips(search models.TripSearch) ([]models.Trip, error)
 }
 
 type tripService struct {

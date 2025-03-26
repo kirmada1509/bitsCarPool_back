@@ -2,7 +2,6 @@ package database
 
 import (
 	"bitsCarPool_back/internal/crud/trips"
-	"bitsCarPool_back/internal/models"
 	"context"
 	"fmt"
 	"log"
@@ -16,7 +15,8 @@ import (
 
 type Service interface {
 	Health() map[string]string
-	CreateTrip(trip *models.Trip) (string, error)
+	GetClient() (*mongo.Client, string)
+
 }
 
 type service struct {
@@ -35,11 +35,13 @@ func New() Service {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	return &service{
 		db:    client,
-		trips: trips.NewTripService(client, database),
 	}
+}
+
+func (s *service) GetClient() (*mongo.Client, string){
+	return s.db, database
 }
 
 func (s *service) Health() map[string]string {
@@ -54,8 +56,4 @@ func (s *service) Health() map[string]string {
 	return map[string]string{
 		"message": "It's healthy",
 	}
-}
-
-func (s *service) CreateTrip(trip *models.Trip) (string, error) {
-	return s.trips.CreateTrip(trip)
 }
