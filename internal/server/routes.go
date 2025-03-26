@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -32,6 +33,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	//notfications
 	r.POST("/notification", s.createNotificationHandler)
+	r.GET("/notification", s.getNotificationsHandler)
 
 	return r
 }
@@ -84,13 +86,31 @@ func (s *Server) createNotificationHandler(c *gin.Context){
 	
 	if err := c.ShouldBindJSON(&notification_body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		return 
 	}
 	id, err := notification.NewNotificationService(database.New().GetClient()).CreateNotification(&notification_body)
 	
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	
 	c.JSON(http.StatusOK, gin.H{"id": id})
+}
+func (s *Server) getNotificationsHandler(c *gin.Context){
+	var user models.User
+	
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	fmt.Println("nigga")
+	fmt.Println(user.ID)
+	id, err := notification.NewNotificationService(database.New().GetClient()).GetNotifications(&user)
+	
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, id)
 }
