@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (s *notificationService) CreateNotification(notification *models.NotificationModel) (string, error) {
+func (s *notificationService) CreateNotification(notification *models.Notification) (string, error) {
 	if notification == nil {
 		return "", errors.New("invalid data")
 	}

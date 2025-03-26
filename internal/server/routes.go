@@ -32,7 +32,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	//notfications
 	r.POST("/notification", s.createNotificationHandler)
-	r.POST("/notification_response", s.notificationResponeHandler)
 
 	return r
 }
@@ -81,7 +80,7 @@ func (s *Server) searchTripsHandler(c *gin.Context){
 }
 
 func (s *Server) createNotificationHandler(c *gin.Context){
-	var notification_body models.NotificationModel
+	var notification_body models.Notification
 	
 	if err := c.ShouldBindJSON(&notification_body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -94,22 +93,4 @@ func (s *Server) createNotificationHandler(c *gin.Context){
 	}
 	
 	c.JSON(http.StatusOK, gin.H{"id": id})
-}
-
-func (s *Server) notificationResponeHandler(c *gin.Context){
-	var update_notification models.UpdateNotificationModel
-	
-	if err := c.ShouldBindJSON(&update_notification); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	msg, err := notification.NewNotificationService(database.New().GetClient()).UpdateNotification(&update_notification)
-	
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	}
-	
-	c.JSON(http.StatusOK, gin.H{"id": msg})
-
 }
