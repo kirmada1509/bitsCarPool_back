@@ -1,9 +1,13 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type Trip struct {
-	ID                string `json:"id" bson:"_id,omitempty"`
+	ID               primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Creator          User   `json:"creator" bson:"creator"`
 	From             string    `json:"from" bson:"from"`
 	To               string    `json:"to" bson:"to"`

@@ -27,6 +27,3 @@ func (s *notificationService) GetNotifications(user_id string) ([]models.Notific
 	var n []models.NotificationModel
 	return n, nil
 }
-func (s *notificationService) 	UpdateNotification(updateNotificationModel *models.UpdateNotificationModel) (string, error){
-	return  " ", nil
-}

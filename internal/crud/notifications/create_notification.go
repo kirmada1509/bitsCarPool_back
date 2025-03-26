@@ -7,12 +7,16 @@ import (
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (s *notificationService) CreateNotification(notification *models.NotificationModel) (string, error) {
 	if notification == nil {
 		return "", errors.New("invalid data")
 	}
+
+
+	notification.NotificationID = primitive.NewObjectID().Hex()
 
 	collection := s.db.Database(s.database).Collection("users")
 
@@ -48,5 +52,5 @@ func (s *notificationService) CreateNotification(notification *models.Notificati
 		return "", fmt.Errorf("failed to update notifications_sent for user %s: %v", notification.From, err)
 	}
 
-	return "Notification created successfully", nil
+	return notification.NotificationID, nil
 }

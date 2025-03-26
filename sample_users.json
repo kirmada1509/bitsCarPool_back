@@ -1,0 +1,53 @@
+[
+    {
+      "_id": "user_001",
+      "name": "Rahul Sharma",
+      "email": "rahul.sharma@bits-pilani.ac.in",
+      "phone": "+91-9876543210",
+      "gender": "Male",
+      "bits_id": "2024ADPS1234P",
+      "notifications_received": [],
+      "notifications_sent": []
+    },
+    {
+      "_id": "user_002",
+      "name": "Priya Verma",
+      "email": "priya.verma@bits-pilani.ac.in",
+      "phone": "+91-9876543211",
+      "gender": "Female",
+      "bits_id": "2024ADPS5678P",
+      "notifications_received": [],
+      "notifications_sent": []
+    },
+    {
+      "_id": "user_003",
+      "name": "Amit Gupta",
+      "email": "amit.gupta@bits-pilani.ac.in",
+      "phone": "+91-9876543212",
+      "gender": "Male",
+      "bits_id": "2024ADPS9101P",
+      "notifications_received": [],
+      "notifications_sent": []
+    },
+    {
+      "_id": "user_004",
+      "name": "Neha Singh",
+      "email": "neha.singh@bits-pilani.ac.in",
+      "phone": "+91-9876543213",
+      "gender": "Female",
+      "bits_id": "2024ADPS1121P",
+      "notifications_received": [],
+      "notifications_sent": []
+    },
+    {
+      "_id": "user_005",
+      "name": "Kiran Das",
+      "email": "kiran.das@bits-pilani.ac.in",
+      "phone": "+91-9876543214",
+      "gender": "Other",
+      "bits_id": "2024ADPS3141P",
+      "notifications_received": [],
+      "notifications_sent": []
+    }
+  ]
+  
